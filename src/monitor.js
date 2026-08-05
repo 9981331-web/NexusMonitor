@@ -44,6 +44,7 @@ export async function checkOnce(config, dependencies = {}) {
       version: 1,
       caseKey,
       fingerprint: snapshot.fingerprint,
+      rows: snapshot.rows,
       observedAt: now.toISOString(),
       lastChangeAlertDate: null,
       lastHeartbeatDate: null
@@ -65,18 +66,26 @@ export async function checkOnce(config, dependencies = {}) {
     return { outcome: 'unchanged', notified: false };
   }
 
-  const message = [
+  let message = [
     'Изменение в судебном деле обнаружено.',
     config.caseNumber ? `Дело: ${config.caseNumber}` : '',
     `Страница: ${redactUrl(config.caseUrl)}`,
     '',
     snapshot.text.slice(0, 3000)
   ].filter((part) => part !== '').join('\n');
+  const newRows = snapshot.rows.filter((row) => !previous.rows?.includes(row));
+  const details = newRows.length ? newRows : ['\u0422\u0430\u0431\u043b\u0438\u0446\u0430 \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u044f \u0434\u0435\u043b\u0430 \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0430; \u043d\u043e\u0432\u0430\u044f \u0441\u0442\u0440\u043e\u043a\u0430 \u043d\u0435 \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0435\u043d\u0430.'];
+  message = [
+    '\u041e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d\u043e \u0438\u0437\u043c\u0435\u043d\u0435\u043d\u0438\u0435 \u0432 \u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0438 \u0441\u0443\u0434\u0435\u0431\u043d\u043e\u0433\u043e \u0434\u0435\u043b\u0430.',
+    '\u041d\u043e\u0432\u0430\u044f \u0438\u043b\u0438 \u0438\u0437\u043c\u0435\u043d\u0451\u043d\u043d\u0430\u044f \u0437\u0430\u043f\u0438\u0441\u044c:',
+    ...details
+  ].join('\n');
   await notify({ token: config.token, chatId: config.chatId, text: message });
   writeState(config.statePath, {
     version: 1,
     caseKey,
     fingerprint: snapshot.fingerprint,
+    rows: snapshot.rows,
     observedAt: now.toISOString(),
     lastChangeAlertDate: today,
     lastHeartbeatDate: previous.lastHeartbeatDate ?? null

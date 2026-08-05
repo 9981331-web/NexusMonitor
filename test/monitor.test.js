@@ -52,6 +52,11 @@ test('extractor fingerprints the case card but ignores content outside main', ()
   assert.notEqual(first.fingerprint, changed.fingerprint);
 });
 
+test('movement table exposes individual event rows', () => {
+  const snapshot = extractCourtSnapshot('<table id="tablcont"><tr><th>ДВИЖЕНИЕ ДЕЛА</th></tr><tr><td>Наименование события</td><td>Дата</td></tr><tr><td>Предварительное заседание</td><td>07.09.2026</td><td>14:30</td></tr></table>');
+  assert.deepEqual(snapshot.rows, ['Предварительное заседание | 07.09.2026 | 14:30']);
+});
+
 test('weekday schedule uses 12:00 and 18:00 Moscow and skips weekends', () => {
   assert.equal(nextScheduledCheck(new Date('2026-08-05T08:00:00Z')).at.toISOString(), '2026-08-05T09:00:00.000Z');
   assert.equal(nextScheduledCheck(new Date('2026-08-05T09:01:00Z')).at.toISOString(), '2026-08-05T15:00:00.000Z');

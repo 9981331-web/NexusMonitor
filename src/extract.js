@@ -46,8 +46,14 @@ export function extractCourtSnapshot(html, caseNumber = '') {
   }
   // For sudrf.ru, fingerprint only the movement table, not general case data.
   const normalized = [...new Set(lines.map((line) => line.normalize('NFKC')))].join('\n');
+  const rows = movementTable
+    ? [...movementTable.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/giu)]
+      .map((match) => htmlToLines(match[1]).map((line) => line.normalize('NFKC')).join(' | '))
+      .filter((row) => row && !/движение дела|наименование события/iu.test(row))
+    : [];
   return {
     text: normalized,
+    rows,
     fingerprint: createHash('sha256').update(normalized, 'utf8').digest('hex')
   };
 }
