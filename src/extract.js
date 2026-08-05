@@ -32,19 +32,19 @@ const hearingPattern = /(?:заседан|слушан|рассмотрен|на
 const datePattern = /(?:\b\d{1,2}[./-]\d{1,2}[./-]\d{2,4}\b|\b\d{4}-\d{2}-\d{2}\b|\b\d{1,2}:\d{2}\b)/u;
 
 export function extractCourtSnapshot(html, caseNumber = '') {
-  const main = /<main\b[^>]*>([\s\S]*?)<\/main>/iu.exec(html)?.[1] ?? html;
-  const lines = htmlToLines(main);
+  // sudrf.ru returns all tabs in one document; tab 2 is the movement table.
+  const movementTable = /<table\b[^>]*\bid\s*=\s*(['"])tablcont\1[^>]*>([\s\S]*?)<\/table>/iu.exec(html)?.[0];
+  const source = movementTable ?? /<main\b[^>]*>([\s\S]*?)<\/main>/iu.exec(html)?.[1] ?? html;
+  const lines = htmlToLines(source);
   const caseNeedle = caseNumber.toLocaleLowerCase('ru-RU');
   const relevant = lines.filter((line) => {
     const lower = line.toLocaleLowerCase('ru-RU');
     return hearingPattern.test(line) || (datePattern.test(line) && (!caseNeedle || lower.includes(caseNeedle)));
   });
-  if (!relevant.length) {
+  if (!movementTable && !relevant.length) {
     throw new Error('No hearing date or case status information was found on the page');
   }
-  // The complete main case card is fingerprinted so judge, party, category, status,
-  // hearing, and other card changes are detected. Header/footer noise is excluded
-  // when the court page provides a semantic <main> element.
+  // For sudrf.ru, fingerprint only the movement table, not general case data.
   const normalized = [...new Set(lines.map((line) => line.normalize('NFKC')))].join('\n');
   return {
     text: normalized,

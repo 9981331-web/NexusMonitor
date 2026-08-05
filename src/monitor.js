@@ -14,6 +14,14 @@ function redactUrl(rawUrl) {
   return url.toString();
 }
 
+async function readCourtHtml(response) {
+  const bytes = await response.arrayBuffer();
+  const contentType = response.headers?.get?.('content-type') ?? '';
+  const charset = /charset\s*=\s*([\w-]+)/iu.exec(contentType)?.[1]?.toLowerCase();
+  const encoding = charset === 'windows-1251' || charset === 'cp1251' ? 'windows-1251' : 'utf-8';
+  return new TextDecoder(encoding).decode(bytes);
+}
+
 export async function checkOnce(config, dependencies = {}) {
   const fetchImpl = dependencies.fetchImpl ?? fetch;
   const notify = dependencies.notify ?? ((details) => sendTelegram({ ...details, fetchImpl }));
@@ -26,7 +34,7 @@ export async function checkOnce(config, dependencies = {}) {
     redirect: 'follow'
   });
   if (!response.ok) throw new Error(`Court page request failed with HTTP ${response.status}`);
-  const html = await response.text();
+  const html = await readCourtHtml(response);
   const snapshot = extractCourtSnapshot(html, config.caseNumber);
   const previous = readState(config.statePath);
   const caseKey = config.caseNumber || redactUrl(config.caseUrl);

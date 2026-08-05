@@ -9,7 +9,7 @@ import { checkOnce } from '../src/monitor.js';
 import { nextScheduledCheck } from '../src/schedule.js';
 
 function response(html, status = 200) {
-  return { ok: status >= 200 && status < 300, status, text: async () => html };
+  return { ok: status >= 200 && status < 300, status, headers: { get: () => 'text/html; charset=utf-8' }, arrayBuffer: async () => new TextEncoder().encode(html).buffer };
 }
 
 test('missing configuration refuses monitoring', () => {
