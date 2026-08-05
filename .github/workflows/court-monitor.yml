@@ -1,0 +1,41 @@
+name: Court monitor
+
+on:
+  schedule:
+    - cron: '0 9 * * 1-5'
+    - cron: '0 15 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check-courts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      COURT_CASE_URL: ${{ secrets.COURT_CASE_URL }}
+      COURT_CASE_URL_2: ${{ secrets.COURT_CASE_URL_2 }}
+      COURT_TIME_ZONE: Europe/Moscow
+      COURT_POLL_TIMES: 12:00,18:00
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run scheduled check
+        run: |
+          if [ "${{ github.event.schedule }}" = "0 9 * * 1-5" ]; then
+            npm run midday
+          else
+            npm run evening
+          fi
+      - name: Save non-secret comparison state
+        run: |
+          git config user.name "Nexus Court Monitor"
+          git config user.email "noreply@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "Update court monitor state"
+          git push
