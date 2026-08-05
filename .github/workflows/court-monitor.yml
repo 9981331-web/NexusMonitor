@@ -2,8 +2,8 @@ name: Court monitor
 
 on:
   schedule:
-    - cron: '0 9 * * 1-5'
-    - cron: '0 15 * * 1-5'
+    - cron: '8 9 * * 1-5'
+    - cron: '8 15 * * 1-5'
   workflow_dispatch:
 
 permissions:
@@ -19,7 +19,7 @@ jobs:
       COURT_CASE_URL: ${{ secrets.COURT_CASE_URL }}
       COURT_CASE_URL_2: ${{ secrets.COURT_CASE_URL_2 }}
       COURT_TIME_ZONE: Europe/Moscow
-      COURT_POLL_TIMES: 12:00,18:00
+      COURT_POLL_TIMES: 12:08,18:08
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,7 +27,7 @@ jobs:
           node-version: 20
       - name: Run scheduled check
         run: |
-          if [ "${{ github.event.schedule }}" = "0 9 * * 1-5" ]; then
+          if [ "${{ github.event.schedule }}" = "8 9 * * 1-5" ]; then
             npm run midday
           else
             npm run evening

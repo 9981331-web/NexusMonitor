@@ -30,7 +30,7 @@ if (config) {
     if (issues.length) {
       log('info', 'not-configured', { issues, monitoringStarted: false });
     } else {
-      log('info', 'configuration-ready', { monitoringStarted: false, schedule: 'weekdays 12:00,18:00 Europe/Moscow' });
+      log('info', 'configuration-ready', { monitoringStarted: false, schedule: 'weekdays 12:08,18:08 Europe/Moscow' });
     }
   } else if (!['once', 'monitor', 'midday', 'evening'].includes(command)) {
     log('error', 'Usage: node src/cli.js check|once|midday|evening|monitor');
@@ -52,7 +52,7 @@ if (config) {
     if (['once', 'midday', 'evening'].includes(command)) {
       await run(command === 'once' ? 'manual' : command);
     } else {
-      log('info', 'monitor-started', { schedule: 'weekdays 12:00,18:00 Europe/Moscow' });
+      log('info', 'monitor-started', { schedule: 'weekdays 12:08,18:08 Europe/Moscow' });
       const schedule = () => {
         const next = nextScheduledCheck();
         const delay = Math.max(0, next.at.getTime() - Date.now());

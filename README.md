@@ -7,8 +7,8 @@ and sends immediate Telegram alerts for card, hearing, or status changes.
 
 - Monitoring refuses to start without a real `COURT_CASE_URL`, bot token, and chat ID.
 - The first successful check creates a baseline and sends nothing.
-- Polls run only Monday-Friday at 12:00 and 18:00 Europe/Moscow; weekends are skipped.
-- After the 18:00 poll, it sends exactly one daily no-change heartbeat only when no
+- Polls run only Monday-Friday at 12:08 and 18:08 Europe/Moscow; weekends are skipped.
+- After the 18:08 poll, it sends exactly one daily no-change heartbeat only when no
   change alert was sent that Moscow calendar day.
 - A semantic `<main>` case card is preferred, excluding changing headers and footers.
 - State advances only after Telegram accepts a change notification, so failed sends retry.

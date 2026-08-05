@@ -1,7 +1,7 @@
 const MOSCOW_UTC_OFFSET_HOURS = 3;
 const SLOTS = [
-  { hour: 12, minute: 0, kind: 'midday' },
-  { hour: 18, minute: 0, kind: 'evening' }
+  { hour: 12, minute: 8, kind: 'midday' },
+  { hour: 18, minute: 8, kind: 'evening' }
 ];
 
 export function moscowDateKey(date) {
@@ -29,4 +29,3 @@ export function nextScheduledCheck(after = new Date()) {
   }
   throw new Error('Unable to calculate the next weekday court check');
 }
-

@@ -47,7 +47,7 @@ export function loadConfig(options = {}) {
     caseNumber: caseNumbers[0] || '',
     cases: caseUrls.map((url, index) => ({ url, caseNumber: caseNumbers[index] || '' })),
     timeZone: env.COURT_TIME_ZONE?.trim() || 'Europe/Moscow',
-    pollTimes: env.COURT_POLL_TIMES?.trim() || '12:00,18:00',
+    pollTimes: env.COURT_POLL_TIMES?.trim() || '12:08,18:08',
     statePath: path.resolve(options.statePath ?? path.join(projectRoot, 'data', 'state.json')),
     aggregateStatePath: path.resolve(options.aggregateStatePath ?? path.join(projectRoot, 'data', 'daily.json'))
   };
@@ -67,7 +67,7 @@ export function configurationIssues(config) {
   if (!config.token) issues.push('TELEGRAM_BOT_TOKEN is missing');
   if (!config.chatId) issues.push('TELEGRAM_CHAT_ID is missing');
   if (config.timeZone !== 'Europe/Moscow') issues.push('COURT_TIME_ZONE must be Europe/Moscow');
-  if (config.pollTimes !== '12:00,18:00') issues.push('COURT_POLL_TIMES must be 12:00,18:00');
+  if (config.pollTimes !== '12:08,18:08') issues.push('COURT_POLL_TIMES must be 12:08,18:08');
   return issues;
 }
 

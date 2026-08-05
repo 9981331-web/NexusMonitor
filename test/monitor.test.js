@@ -41,7 +41,7 @@ test('local env file loads without exposing values in configuration issues', () 
   const config = loadConfig({ processEnv: {}, envPath });
   assert.deepEqual(configurationIssues(config), []);
   assert.equal(config.timeZone, 'Europe/Moscow');
-  assert.equal(config.pollTimes, '12:00,18:00');
+  assert.equal(config.pollTimes, '12:08,18:08');
 });
 
 test('extractor fingerprints the case card but ignores content outside main', () => {
@@ -57,10 +57,10 @@ test('movement table exposes individual event rows', () => {
   assert.deepEqual(snapshot.rows, ['Предварительное заседание | 07.09.2026 | 14:30']);
 });
 
-test('weekday schedule uses 12:00 and 18:00 Moscow and skips weekends', () => {
-  assert.equal(nextScheduledCheck(new Date('2026-08-05T08:00:00Z')).at.toISOString(), '2026-08-05T09:00:00.000Z');
-  assert.equal(nextScheduledCheck(new Date('2026-08-05T09:01:00Z')).at.toISOString(), '2026-08-05T15:00:00.000Z');
-  assert.equal(nextScheduledCheck(new Date('2026-08-07T15:01:00Z')).at.toISOString(), '2026-08-10T09:00:00.000Z');
+test('weekday schedule uses 12:08 and 18:08 Moscow and skips weekends', () => {
+  assert.equal(nextScheduledCheck(new Date('2026-08-05T08:00:00Z')).at.toISOString(), '2026-08-05T09:08:00.000Z');
+  assert.equal(nextScheduledCheck(new Date('2026-08-05T09:09:00Z')).at.toISOString(), '2026-08-05T15:08:00.000Z');
+  assert.equal(nextScheduledCheck(new Date('2026-08-07T15:09:00Z')).at.toISOString(), '2026-08-10T09:08:00.000Z');
 });
 
 test('evening sends exactly one heartbeat only if no change alert was sent that day', async () => {
