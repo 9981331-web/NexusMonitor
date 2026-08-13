@@ -2,3 +2,8 @@
 data/*.tmp
 *.log
 node_modules/
+.npm-cache/
+.russian-post/
+russian-post-profile/
+russian-post-state/
+russian-post-diagnostics/

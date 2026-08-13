@@ -13,6 +13,14 @@
     "midday": "node src/cli.js midday",
     "evening": "node src/cli.js evening",
     "start": "node src/cli.js monitor",
+    "russian-post:check": "node src/russian-post-cli.js check",
+    "russian-post:login": "node src/russian-post-cli.js login",
+    "russian-post:probe": "node src/russian-post-cli.js probe",
+    "russian-post:once": "node src/russian-post-cli.js once",
+    "russian-post:scheduled": "node src/russian-post-cli.js scheduled",
     "test": "node --test"
+  },
+  "dependencies": {
+    "playwright-core": "^1.62.1"
   }
 }
